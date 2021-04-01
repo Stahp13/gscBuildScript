@@ -20,24 +20,22 @@ if not exist %t6r_data% (
 
 set deploy_path=%t6r_data%\maps
 set deploy_path=%deploy_path:/=\%
-echo deploy_path = %deploy_path%
 
-rmdir /s/Q %deploy_path%
+if exist %deploy_path% (
+    rmdir /s/Q %deploy_path%
+)
 mkdir %deploy_path%
 Xcopy /s/e . "%deploy_path%"
 cd %deploy_path%
 
 :compile
-echo %cd_length%
 for %%F in (*.gsc) do (
-    echo %%F
     gscCompiler.exe %%F
     del /f %%F
     ren %%~nF-compiled.gsc %%~nF.gsc
 )
 for /D %%d in (*) do (
     cd %%d
-    echo CD=%CD%
     call :compile
     cd ..
 )
